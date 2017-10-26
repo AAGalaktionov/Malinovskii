@@ -13,9 +13,7 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 
 public class Main extends ApplicationFrame {
@@ -57,7 +55,7 @@ public class Main extends ApplicationFrame {
 
         final XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series1);
-        //dataset.addSeries(series2);
+        dataset.addSeries(series2);
 
         return dataset;
 
@@ -142,7 +140,7 @@ public class Main extends ApplicationFrame {
 
     static void tipomain() {
         System.out.println("Begin");
-        double alpha = 1.0, betta = 1.0, M, D2, u = 17.0, c = 0.15, v = 0.0, t = 100000000000000000000000.0;
+        double alpha = 1.0, betta = 1.0, M, D2, u = 10.0, c = 0.01, v = 0.0, t = 100.0;
         M = alpha / betta;
         D2 = (2.0 * alpha) / (Math.pow(betta, 2.0));
         //double D = Math.sqrt(D2);
@@ -150,30 +148,40 @@ public class Main extends ApplicationFrame {
         // ArrayList<Double> Mt = new ArrayList <Double>();
 
 
-        while (c < 2.1) {
+        while (c < 2.15) {
             double x2 = ((c * (t - v)) / (u + c * v)) + 1;
 
             double tmp1 = normal(((Math.sqrt(u + c * v)) / (c * Math.sqrt(D2) * Math.sqrt(x2))) * (x2 * (1 - c * M) - 1));
             double tmp3 = normal(((Math.sqrt(u + c * v)) / (c * Math.sqrt(D2) * Math.sqrt(x1))) * (x1 * (1 - c * M) - 1));
             double tmp2 = Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M)) * normal(-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x2)) * (x2 * (1 - c * M) + 1));
             double tmp4 = Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M)) * normal(-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x1)) * (x1 * (1 - c * M) + 1));
-            double tmp5 = normal(-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x2)) * (x2 * (1 - c * M) + 1));
-            double tmp6 = normal(-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x1)) * (x1 * (1 - c * M) + 1));
+            double tmp5 = normal((-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x2))) * (x2 * (1 - c * M) + 1));
+            double tmp6 = normal((-(Math.sqrt(u + c * v)) / (c * Math.sqrt(D2 * x1))) * (x1 * (1 - c * M) + 1));
             double tmp = (tmp1 + tmp2) - (tmp3 + tmp4);
 
             double Cf = betta/(4*alpha*c);
             double Cs = betta/(4*alpha*c);
-            double Ft = (-(c*c*D2)/(u+c*v))*((tmp1+tmp2)-(tmp3+tmp4)) + 2*(1-c*M)*Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M))*
+           /* double Ft = (-(c*c*D2)/(u+c*v))*((tmp1+tmp2)-(tmp3+tmp4)) + 2*(1-c*M)*Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M))*
                     (tmp5-tmp6)-((2*c*Math.sqrt(D2))/Math.sqrt(Math.PI*x2*(u+c*v)))*Math.exp(-((u+c*v)/(2*x2*c*c*D2))*Math.pow(x2*(1-c*M)-1 ,2.0))+
-                    ((2*c*Math.sqrt(D2))/Math.sqrt(Math.PI*x1*(u+c*v)))*Math.exp(-((u+c*v)/(2*x1*c*c*D2))*Math.pow(x1*(1-c*M)-1 ,2.0));
-            double St = (-(3*c*c*D2)/(u+c*v))*((tmp1+tmp2)-(tmp3+tmp4)) + 2*(1-c*M)*(3-4*((u+c*v)/(c*c*D2))*(1-c*M))*Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M))*
-                    (tmp5-tmp6)-((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x2, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x2+(u+c*v)/(c*c*D2))*Math.exp(-((u+c*v)/(2*x2*c*c*D2)))*Math.pow(x2*(1-c*M)-1 ,2.0))+
-                    ((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x1, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x1+(u+c*v)/(c*c*D2))*Math.exp(-((u+c*v)/(2*x2*c*c*D2)))*Math.pow(x1*(1-c*M)-1 ,2.0));
-            Et.put(c,tmp + Cf*Ft +Cs*St);
+                    ((2*c*Math.sqrt(D2))/Math.sqrt(Math.PI*x1*(u+c*v)))*Math.exp(-((u+c*v)/(2*x1*c*c*D2))*Math.pow(x1*(1-c*M)-1 ,2.0));*/
+            double Ft = (-(c*c*D2)/(u+c*v))*((tmp1 + tmp2) - (tmp3 + tmp4)) + 2*(1 - c*M)*(tmp2 - tmp4)-
+                    (((2*c*Math.sqrt(D2))/Math.sqrt(Math.PI*x1*(u+c*v)))*((Math.exp(((- (u + c*v)) / (2*x2*c*c*D2))*Math.pow(x2*(1 - c*M)-1 , 2.0))
+                            -(Math.exp(((- (u + c*v)) / (2*x1*c*c*D2))*Math.pow(x1*(1 - c*M)-1 , 2.0))))));
+
+            /*double St = (-(3*c*c*D2)/(u+c*v))*((tmp1+tmp2)-(tmp3+tmp4)) + 2*(1-c*M)*(3-4*((u+c*v)/(c*c*D2))*(1-c*M))*Math.exp(((2 * (u + c * v)) / (c * c * D2)) * (1 - c * M))*
+                    (tmp5-tmp6)-((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x2, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x2+(u+c*v)/(c*c*D2))*Math.exp((-((u+c*v)/(2*x2*c*c*D2)))*Math.pow(x2*(1-c*M)-1 ,2.0)))+
+                    ((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x1, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x1+(u+c*v)/(c*c*D2))*Math.exp((-((u+c*v)/(2*x2*c*c*D2)))*Math.pow(x1*(1-c*M)-1 ,2.0)));*/
+            double St = (-(3*c*c*D2)/(u+c*v))* ((tmp1+tmp2)-(tmp3+tmp4)) + 2*(1-c*M)*(3-4*((u+c*v)/(c*c*D2))*(1-c*M))*(tmp2 - tmp4)-
+                    (((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x2, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x2+(u+c*v)/(c*c*D2)))*((Math.exp(((- (u + c*v)) / (2*x2*c*c*D2))*Math.pow(x2*(1 - c*M)-1 , 2.0))))
+                            -((Math.sqrt(2.0)*c*Math.sqrt(D2))/(Math.sqrt(Math.PI*(u+c*v))*Math.pow(x1, 1.5))*(3*(1-((u+c*v)/(c*c*D2))*(1-c*M))*x1+(u+c*v)/(c*c*D2)))*((Math.exp(((- (u + c*v)) / (2*x1*c*c*D2))*Math.pow(x1*(1 - c*M)-1 , 2.0)))));
+
+            Et.put(c,(tmp + Cf*Ft + Cs*St));
             Mt.put(c, tmp);
             c += 0.05;
 
         }
+
+
 
         System.out.println("end");
 
