@@ -178,7 +178,7 @@ public class Main extends ApplicationFrame {
             Et.put(c,(tmp + Cf*Ft + Cs*St));
             Mt.put(c, tmp);
             c += 0.05;
-
+////123
         }
 
 
